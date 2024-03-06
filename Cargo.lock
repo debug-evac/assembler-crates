@@ -63,6 +63,7 @@ dependencies = [
 name = "assembler"
 version = "1.3.0"
 dependencies = [
+ "assembler_lib",
  "assert_cmd",
  "assert_fs",
  "clap",
@@ -71,10 +72,7 @@ dependencies = [
  "indicatif",
  "indicatif-log-bridge",
  "log",
- "nom",
  "predicates",
- "pyo3",
- "smartstring",
 ]
 
 [[package]]
