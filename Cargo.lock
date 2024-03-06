@@ -78,6 +78,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "assembler_lib"
+version = "1.3.0"
+dependencies = [
+ "assert_cmd",
+ "assert_fs",
+ "clap",
+ "console",
+ "env_logger",
+ "indicatif",
+ "indicatif-log-bridge",
+ "log",
+ "nom",
+ "predicates",
+ "pyo3",
+ "smartstring",
+]
+
+[[package]]
 name = "assert_cmd"
 version = "2.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
