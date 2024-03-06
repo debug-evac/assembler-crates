@@ -1,5 +1,5 @@
 [workspace]
-members = ["assembler", "assembler_lib"]
+members = ["assembler", "assembler_lib", "disassembler_lib"]
 resolver = "2"
 
 [workspace.package]
@@ -11,6 +11,7 @@ publish = ["mafiasi-gitea"]
 [workspace.dependencies]
 # Internal crates
 assembler_lib = { path = "assembler_lib", version = "1.3.0", registry = "mafiasi-gitea" }
+disassembler_lib = { path = "disassembler_lib", version = "0.1.0", registry = "mafiasi-gitea" }
 
 # External crates
 nom = "7.1.3"

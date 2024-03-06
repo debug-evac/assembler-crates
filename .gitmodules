@@ -4,3 +4,6 @@
 [submodule "assembler_lib"]
 	path = assembler_lib
 	url = git@git.mafiasi.de:Prj-MR/assembler_lib.git
+[submodule "disassembler_lib"]
+	path = disassembler_lib
+	url = git@git.mafiasi.de:Prj-MR/disassembler_lib.git
