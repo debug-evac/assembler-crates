@@ -1,0 +1,2 @@
+[registries.mafiasi-gitea]
+index = "sparse+https://git.mafiasi.de/api/packages/Prj-MR/cargo/"
