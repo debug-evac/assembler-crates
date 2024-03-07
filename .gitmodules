@@ -7,3 +7,6 @@
 [submodule "disassembler_lib"]
 	path = disassembler_lib
 	url = git@git.mafiasi.de:Prj-MR/disassembler_lib.git
+[submodule "asm_core_lib"]
+	path = asm_core_lib
+	url = git@git.mafiasi.de:Prj-MR/asm_core_lib.git
