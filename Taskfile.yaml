@@ -1,0 +1,161 @@
+version: '3'
+
+vars:
+  TARGETS: 'x86_64-unknown-linux-gnu x86_64-pc-windows-gnu aarch64-apple-darwin'
+  CRATE_NAME:
+    sh: realpath --relative-to=../assembler-crates {{.USER_WORKING_DIR}} | cut -d/ -f1
+  CRATE_TYPE:
+    sh: if [[ {{.CRATE_NAME}} == *_lib ]]; then echo lib; else echo bin; fi
+  PY_MOD:
+    sh: if [[ {{.CRATE_NAME}} == assembler_lib ]]; then echo -py; else echo -n ""; fi
+
+tasks:
+  # Blanket task for other crate specific tasks
+  full-release:
+    dir: ./{{.CRATE_NAME}}
+    aliases: [fr]
+    cmds:
+      - task: cargo-release-{{.CRATE_TYPE}}
+      - task: full-release-{{.CRATE_TYPE}}{{.PY_MOD}}
+      - for: ['main', 'stable']
+        task: checkout-and-merge
+        vars:
+          BRANCH: '{{.ITEM}}'
+      - echo 'Done! You can now remove the release branch.'
+    env:
+      PUBLISH_GRACE_SLEEP: 5
+
+  full-release-bin:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - task: build-binaries
+      - task: create-release-git
+    env:
+      PUBLISH_GRACE_SLEEP: 5
+
+  full-release-lib:
+    cmds:
+      - echo "Lib does not need anything here!"
+
+  full-release-lib-py:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - task: build-python-packages
+
+  # Binary version of task does not require tags
+  cargo-release-bin:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - task: cargo-release-verrep
+      - sleep 1
+      - task: git-commits
+      - sleep 1
+      - cargo publish
+      - sleep 1
+      - git push origin --all
+
+  cargo-release-lib:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - task: cargo-release-verrep
+      - sleep 1
+      - task: git-commits
+      - sleep 1
+      - cargo publish
+      - sleep 1
+      - task: git-tags
+      - sleep 1
+      - git push origin --all
+
+  git-tags:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - 'git tag {{.VERSION}} -a -m "chore: Release version {{.VERSION}}" -s'
+    vars:
+      VERSION:
+        sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' Cargo.toml | head -1
+
+  cargo-release-verrep:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - cargo release version {{.LEVEL}} --execute --no-confirm
+      - cargo release replace --execute --no-confirm
+    requires:
+      vars: [LEVEL]
+
+  git-commits:
+    dir: ./{{.CRATE_NAME}}
+    cmds:
+      - git add -A
+      - sleep 1
+      - 'git commit -S -m "chore: Release version {{.VERSION}}"'
+    vars:
+      VERSION:
+        sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' Cargo.toml | head -1
+
+  checkout-and-merge:
+    dir: ./{{.CRATE_NAME}}
+    internal: true
+    cmds:
+      - git checkout {{.BRANCH}}
+      - sleep 1
+      - git merge origin/release/{{.VERSION}}
+      - sleep 1
+    vars:
+      VERSION:
+        sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' Cargo.toml | head -1
+    requires:
+      vars: [BRANCH]
+
+  create-release-git:
+    aliases: [gr]
+    cmds:
+      - tea r c --tag '{{.VERSION}}' --target 'release/{{.VERSION}}' --title 'Release {{.VERSION}}' --note '## {{.RELEASE_BODY}}' --login mafiasi-gitea --repo Prj-MR/{{.CRATE_NAME}} {{.FILE_ARGS}}
+    vars:
+      VERSION:
+        sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' {{.CRATE_NAME}}/Cargo.toml | head -1
+      RELEASE_BODY:
+        sh: grep -Pzo "(?s)\[{{.VERSION}}\].*?(?=## \[|\[)" {{.CRATE_NAME}}/CHANGELOG.md | tr '\0' '\n'
+      FILE_ARGS:
+        sh: find . -maxdepth 2 -name 'assembler-*-*' -printf '--asset="target/%f" '
+
+  build-python-packages:
+    dir: ./{{.CRATE_NAME}}
+    aliases: [pb]
+    cmds:
+      - .venv/bin/python3 -m maturin publish --profile release --target x86_64-unknown-linux-gnu --zig --features "python_lib" -r mafiasi-gitea
+      - .venv/bin/python3 -m maturin publish --profile release --target aarch64-apple-darwin --zig --features "python_lib" -r mafiasi-gitea --no-sdist
+      - PYO3_CROSS_LIB_DIR=./python-win .venv/bin/python3 -m maturin publish --profile release --target x86_64-pc-windows-gnu --features "python_lib" -r mafiasi-gitea --no-sdist
+
+  build-binaries:
+    aliases: [bb]
+    cmds:
+      - for: { var: TARGETS, split: ' ' }
+        task: build-binary
+        vars:
+          TARGET: '{{.ITEM}}'
+      - for: { var: TARGETS, split: ' ' }
+        task: rename-move-binary
+        vars:
+          TARGET: '{{.ITEM}}'
+      - task: sign-binaries
+
+  build-binary:
+    cmds:
+      - cross build -r --target {{.TARGET}} -p {{.CRATE_NAME}}
+    requires:
+      vars: [TARGET]
+
+  rename-move-binary:
+    internal: true
+    cmds:
+      - cp target/{{.TARGET}}/release/{{.CRATE_NAME}}'{{if eq .TARGET "x86_64-pc-windows-gnu"}}.exe{{end}}' target/{{.CRATE_NAME}}-{{.TARGET}}'{{if eq .TARGET "x86_64-pc-windows-gnu"}}.exe{{end}}'
+    requires:
+      vars: [TARGET]
+
+  sign-binaries:
+    cmds:
+      - minisign -Sm target/{{.CRATE_NAME}}-* -t '{{.CRATE_NAME}} {{.VERSION}} - Steven Becker <steven.becker@studium.uni-hamburg.de>'
+    vars:
+      VERSION:
+        sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' {{.CRATE_NAME}}/Cargo.toml | head -1
