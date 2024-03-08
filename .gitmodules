@@ -10,3 +10,6 @@
 [submodule "asm_core_lib"]
 	path = asm_core_lib
 	url = git@git.mafiasi.de:Prj-MR/asm_core_lib.git
+[submodule "debugger"]
+	path = debugger
+	url = git@git.mafiasi.de:Prj-MR/debugger.git
