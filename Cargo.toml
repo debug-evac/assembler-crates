@@ -1,5 +1,5 @@
 [workspace]
-members = ["assembler", "assembler_lib", "disassembler_lib", "asm_core_lib", "debugger"]
+members = ["assembler", "assembler_lib", "asm_core_lib", "debugger"]
 resolver = "2"
 
 [workspace.package]
