@@ -49,6 +49,3 @@ target = "x86_64-unknown-linux-gnu"
 # algorithm = "minisign"
 # pubkey = "RWQ6OyUDGTMQlRVb+YQi+iU6m3qkoDFa3MdTKpwRMb4OpSy/5IOXbM8b"
 # file = "{ url }.minisig"
-
-[workspace.metadata.cross.target.aarch64-apple-darwin]
-image = "ghcr.io/cross-rs/aarch64-apple-darwin-cross:local"
