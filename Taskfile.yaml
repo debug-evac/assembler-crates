@@ -15,6 +15,7 @@ tasks:
     dir: ./{{.CRATE_NAME}}
     aliases: [fr]
     cmds:
+      - cargo clean
       - task: cargo-release-{{.CRATE_TYPE}}
       - task: full-release-{{.CRATE_TYPE}}{{.PY_MOD}}
       - for: ['main', 'stable']
@@ -52,7 +53,7 @@ tasks:
       - sleep 1
       - cargo publish
       - sleep 1
-      - git push origin --all
+      - git push origin
 
   cargo-release-lib:
     dir: ./{{.CRATE_NAME}}
@@ -65,7 +66,7 @@ tasks:
       - sleep 1
       - task: git-tags
       - sleep 1
-      - git push origin --all
+      - git push origin
 
   git-tags:
     dir: ./{{.CRATE_NAME}}
@@ -110,14 +111,14 @@ tasks:
   create-release-git:
     aliases: [gr]
     cmds:
-      - tea r c --tag '{{.VERSION}}' --target 'release/{{.VERSION}}' --title 'Release {{.VERSION}}' --note '## {{.RELEASE_BODY}}' --login mafiasi-gitea --repo Prj-MR/{{.CRATE_NAME}} {{.FILE_ARGS}}
+      - tea r c --tag '{{.VERSION}}' --target 'releases/{{.VERSION}}' --title 'Release {{.VERSION}}' --note {{.RELEASE_BODY}} --login mafiasi-gitea --repo Prj-MR/{{.CRATE_NAME}} {{.FILE_ARGS}}
     vars:
       VERSION:
         sh: grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' {{.CRATE_NAME}}/Cargo.toml | head -1
       RELEASE_BODY:
-        sh: grep -Pzo "(?s)\[{{.VERSION}}\].*?(?=## \[|\[)" {{.CRATE_NAME}}/CHANGELOG.md | tr '\0' '\n'
+        sh: UNSANITIZED_CHANGELOG="## $(grep -Pzo "(?s)\[{{.VERSION}}\].*?(?=## \[|\[)" {{.CRATE_NAME}}/CHANGELOG.md | tr '\0' '\n')"; echo -n "${UNSANITIZED_CHANGELOG@Q}"
       FILE_ARGS:
-        sh: find . -maxdepth 2 -name 'assembler-*-*' -printf '--asset="target/%f" '
+        sh: find . -maxdepth 2 -name '{{.CRATE_NAME}}-*-*' -printf '--asset="target/%f" '
 
   build-python-packages:
     dir: ./{{.CRATE_NAME}}
