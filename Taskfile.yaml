@@ -15,6 +15,7 @@ tasks:
     dir: ./{{.CRATE_NAME}}
     aliases: [fr]
     cmds:
+      - cargo clean
       - task: cargo-release-{{.CRATE_TYPE}}
       - task: full-release-{{.CRATE_TYPE}}{{.PY_MOD}}
       - for: ['main', 'stable']
@@ -117,7 +118,7 @@ tasks:
       RELEASE_BODY:
         sh: grep -Pzo "(?s)\[{{.VERSION}}\].*?(?=## \[|\[)" {{.CRATE_NAME}}/CHANGELOG.md | tr '\0' '\n'
       FILE_ARGS:
-        sh: find . -maxdepth 2 -name 'assembler-*-*' -printf '--asset="target/%f" '
+        sh: find . -maxdepth 2 -name '{{.CRATE_NAME}}-*-*' -printf '--asset="target/%f" '
 
   build-python-packages:
     dir: ./{{.CRATE_NAME}}
