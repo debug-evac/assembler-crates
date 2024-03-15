@@ -79,7 +79,7 @@ dependencies = [
 
 [[package]]
 name = "asm_core_lib"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "smartstring",
 ]
