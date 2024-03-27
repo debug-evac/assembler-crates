@@ -10,7 +10,7 @@ publish = ["mafiasi-gitea"]
 
 [workspace.dependencies]
 # Internal crates
-assembler_lib = { path = "assembler_lib", version = "2.0.0", registry = "mafiasi-gitea" }
+assembler_lib = { path = "assembler_lib", version = "2.1.0", registry = "mafiasi-gitea" }
 
 # External crates
 clap = { version = "4.4.8", features = ["cargo"] }
