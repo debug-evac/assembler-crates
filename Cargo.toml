@@ -1,5 +1,5 @@
 [workspace]
-members = ["assembler", "assembler_lib", "disassembler_lib", "asm_core_lib", "debugger"]
+members = ["assembler", "assembler_lib", "debugger"]
 resolver = "2"
 
 [workspace.package]
@@ -10,12 +10,9 @@ publish = ["mafiasi-gitea"]
 
 [workspace.dependencies]
 # Internal crates
-asm_core_lib = { path = "asm_core_lib", version = "1.0.1", registry = "mafiasi-gitea" }
-assembler_lib = { path = "assembler_lib", version = "1.3.1", registry = "mafiasi-gitea" }
-disassembler_lib = { path = "disassembler_lib", version = "0.1.0", registry = "mafiasi-gitea" }
+assembler_lib = { path = "assembler_lib", version = "2.1.0", registry = "mafiasi-gitea" }
 
 # External crates
-nom = "7.1.3"
 clap = { version = "4.4.8", features = ["cargo"] }
 indicatif = "0.17.7"
 indicatif-log-bridge = "0.2.2"

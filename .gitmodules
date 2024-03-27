@@ -6,10 +6,6 @@
 	path = assembler_lib
 	url = git@git.mafiasi.de:Prj-MR/assembler_lib.git
 	branch = .
-[submodule "asm_core_lib"]
-	path = asm_core_lib
-	url = git@git.mafiasi.de:Prj-MR/asm_core_lib.git
-	branch = .
 [submodule "debugger"]
 	path = debugger
 	url = git@git.mafiasi.de:Prj-MR/debugger.git

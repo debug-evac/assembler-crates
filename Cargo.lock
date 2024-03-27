@@ -78,15 +78,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "asm_core_lib"
-version = "1.0.1"
-dependencies = [
- "smartstring",
-]
-
-[[package]]
 name = "assembler"
-version = "1.3.0"
+version = "2.0.0"
 dependencies = [
  "assembler_lib",
  "assert_cmd",
@@ -102,18 +95,16 @@ dependencies = [
 
 [[package]]
 name = "assembler_lib"
-version = "1.3.1"
+version = "2.1.0"
 dependencies = [
- "asm_core_lib",
- "assert_cmd",
  "assert_fs",
  "console",
  "indicatif",
  "log",
- "nom",
  "predicates",
  "pyo3",
  "smartstring",
+ "winnow",
 ]
 
 [[package]]
@@ -307,7 +298,7 @@ dependencies = [
 
 [[package]]
 name = "debugger"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "assembler_lib",
  "clap",
@@ -320,10 +311,6 @@ name = "difflib"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6184e33543162437515c2e2b48714794e37845ec9851711914eec9d308f6ebe8"
-
-[[package]]
-name = "disassembler_lib"
-version = "0.1.0"
 
 [[package]]
 name = "doc-comment"
@@ -571,12 +558,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "minimal-lexical"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
 name = "mio"
 version = "0.8.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -586,16 +567,6 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "nom"
-version = "7.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
-dependencies = [
- "memchr",
- "minimal-lexical",
 ]
 
 [[package]]
@@ -1246,6 +1217,15 @@ name = "windows_x86_64_msvc"
 version = "0.52.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32b752e52a2da0ddfbdbcc6fceadfeede4c939ed16d13e648833a61dfb611ed8"
+
+[[package]]
+name = "winnow"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dffa400e67ed5a4dd237983829e66475f0a4a26938c4b04c21baede6262215b8"
+dependencies = [
+ "memchr",
+]
 
 [[package]]
 name = "zerocopy"
