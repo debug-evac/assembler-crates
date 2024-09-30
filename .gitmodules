@@ -1,12 +1,9 @@
 [submodule "assembler"]
 	path = assembler
-	url = git@git.mafiasi.de:Prj-MR/assembler.git
-	branch = .
-[submodule "assembler_lib"]
-	path = assembler_lib
-	url = git@git.mafiasi.de:Prj-MR/assembler_lib.git
-	branch = .
+	url = git@git.mafiasi.de:21sbecker/assembler.git
 [submodule "debugger"]
 	path = debugger
-	url = git@git.mafiasi.de:Prj-MR/debugger.git
-	branch = .
+	url = git@git.mafiasi.de:21sbecker/debugger.git
+[submodule "assembler_lib"]
+	path = assembler_lib
+	url = git@git.mafiasi.de:21sbecker/assembler_lib.git
